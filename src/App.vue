@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    
     <router-view />
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+};
 </script>
 
 <style scoped lang="less">
-.wrapper{
+.wrapper {
   width: 200px;
   height: 200px;
   background-color: #bfa;
