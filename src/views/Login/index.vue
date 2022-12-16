@@ -39,10 +39,15 @@
             @click="handleSendCode"
             :loading="isLoadingOfCode"
             loading-text="加载中..."
-            :disabled="isLoadingOfCode"
+            :disabled="sendCode"
           >
             <template v-if="!sendCode"> 发送验证码 </template>
-            <van-count-down v-else @change="handlecountDown" :time="6 * 1000" format=" ss 秒后重发" />
+            <van-count-down
+              v-else
+              @change="handlecountDown"
+              :time="5 * 1000"
+              format=" ss 秒后重发"
+            />
           </van-button>
         </template>
       </van-field>
@@ -56,7 +61,7 @@
 </template>
 
 <script>
-import { sendCode } from "@/api/user";
+import { sendCode, login } from "@/api/user";
 import { Toast } from "vant";
 export default {
   name: "LoginPage",
@@ -65,13 +70,29 @@ export default {
       mobile: "",
       code: "",
       sendCode: false, // 倒计时
-      isLoadingOfCode: false,
+      isLoadingOfCode: false, // loading
     };
   },
 
   methods: {
-    onSubmit(values) {
+    async onSubmit(values) {
       console.log("submit", values);
+      this.$toast.loading({
+        message: "登录中...",
+        forbidClick: true,
+        duration: 0, // 0 表示一直展示，不关闭，默认 2000 ms
+      });
+
+      try {
+        const res = await login(values);
+        // localStorage.setItem('token', JSON.stringify(res?.data?.data))  //本地存储tokenx
+
+        this.$store.commit('user/changeToken',res.data.data)
+        this.$toast.clear();    // 关闭轻提示
+        this.$router.push({ name: "home" });
+      } catch (error) {
+        this.$toast.fail(error.response.data.message)
+      }
     },
 
     async handleSendCode() {
@@ -79,11 +100,13 @@ export default {
       this.isLoadingOfCode = true; // 验证码loading开启
       try {
         await sendCode(this.mobile);
-        this.sendCode = true; // 开启倒计时
       } catch (error) {
         Toast.fail("发送失败");
+        return;
+      } finally {
+        this.isLoadingOfCode = false; // 关闭loading
       }
-      this.isLoadingOfCode = false; // 关闭loading
+      this.sendCode = true; // 开启倒计时
     },
 
     handlecountDown({ seconds }) {
