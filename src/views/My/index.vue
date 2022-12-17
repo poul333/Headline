@@ -2,8 +2,12 @@
   <div class="my-container">
     <div class="header">
       <!-- 未登录 -->
-      <div v-if="!$store.state.user.token" class="not_login" >
-        <img class="mobile-img" src="~@/assets/mobile.png" @click="$router.push('/login')" />
+      <div v-if="!$store.state.user.token" class="not_login">
+        <img
+          class="mobile-img"
+          src="~@/assets/mobile.png"
+          @click="$router.push('/login')"
+        />
         <div class="text">登录 / 注册</div>
       </div>
 
@@ -16,30 +20,32 @@
                 round
                 width="2rem"
                 height="2rem"
-                src="https://img01.yzcdn.cn/vant/cat.jpeg"
+                :src="userBaseInfo.photo"
               />
             </div>
-            <div>黑马头条号</div>
+            <div>{{userBaseInfo.name}}</div>
           </div>
           <div class="c1_2">
-            <van-button size="mini" round>&nbsp;&nbsp;编辑资料&nbsp;&nbsp;</van-button>
+            <van-button size="mini" round
+              >&nbsp;&nbsp;编辑资料&nbsp;&nbsp;</van-button
+            >
           </div>
         </div>
         <div class="c2">
           <div class="c2_1">
-            <div>8</div>
+            <div>{{userBaseInfo.art_count}}</div>
             <div>头条</div>
           </div>
           <div class="c2_1">
-            <div>8</div>
+            <div>{{userBaseInfo.fans_count}}</div>
             <div>头条</div>
           </div>
           <div class="c2_1">
-            <div>8</div>
+            <div>{{userBaseInfo.follow_count}}</div>
             <div>头条</div>
           </div>
           <div class="c2_1">
-            <div>8</div>
+            <div>{{userBaseInfo.like_count}}</div>
             <div>头条</div>
           </div>
         </div>
@@ -69,13 +75,25 @@
     </div>
     <van-cell title="消息通知" is-link url="" />
     <van-cell title="小智同学" is-link url="" />
-    <van-cell v-if="$store.state.user.token" class="logout-cell" title="退出登录" center @click="logout" />
+    <van-cell
+      v-if="$store.state.user.token"
+      class="logout-cell"
+      title="退出登录"
+      center
+      @click="logout"
+    />
   </div>
 </template>
 
 <script>
+import { getUserBaseInfo } from "@/api/user.js";
 export default {
   name: "MyPage",
+  data() {
+    return {
+      userBaseInfo:{}
+    }
+  },
   methods: {
     async logout() {
       await this.$dialog.confirm({
@@ -84,6 +102,10 @@ export default {
       this.$store.commit("user/changeToken");
       this.$router.push({ name: "login" });
     },
+  },
+  async created() {
+   const res =  await getUserBaseInfo();
+    this.userBaseInfo = res.data.data
   },
 };
 </script>
@@ -116,7 +138,7 @@ export default {
 
   > .header {
     height: 361px;
-    background: url('~@/assets/banner.png') no-repeat;
+    background: url("~@/assets/banner.png") no-repeat;
     background-size: cover;
     display: flex;
     flex-direction: column;
