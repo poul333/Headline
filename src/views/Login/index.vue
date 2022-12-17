@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <van-nav-bar title="登录" />
+    <van-nav-bar left-arrow title="登录"  @click-left="$router.push({name:'my'})" />
 
     <van-form ref="form" @submit="onSubmit">
       <van-field
@@ -124,6 +124,10 @@ export default {
 
   .van-nav-bar {
     background-color: #1989fa;
+
+    :deep(.van-icon){
+      color: #fff;
+    }
 
     :deep(.van-nav-bar__title) {
       color: #fff;

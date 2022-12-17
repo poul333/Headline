@@ -10,9 +10,14 @@ export default {
     },
     mutations: {
         changeToken(state, token) {
-            state.token = token.token
-            // localStorage.setItem('token', JSON.stringify(token))  //本地存储tokenx
-            storage.setItem('token',token)
+            if (token) {
+                state.token = token.token
+                // localStorage.setItem('token', JSON.stringify(token))  //本地存储tokenx
+                storage.setItem('token', token)
+            }else{
+                state.token = null
+                storage.removeItem('token')
+            }
         }
     }
 }
