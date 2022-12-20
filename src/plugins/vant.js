@@ -17,6 +17,10 @@ import {
   GridItem,
   Icon,
   Image as VanImage,
+  Tab,
+  Tabs,
+  PullRefresh,
+  List,
 } from "vant";
 
 Vue.use(Button);
@@ -36,3 +40,8 @@ Vue.use(VanImage)
 Vue.use(Icon)
 Vue.use(Grid)
 Vue.use(GridItem)
+Vue.use(Tab)
+Vue.use(Tabs)
+Vue.use(List)
+Vue.use(PullRefresh)
+
